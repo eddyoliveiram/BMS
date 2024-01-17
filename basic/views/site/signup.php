@@ -8,7 +8,7 @@
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
-$this->title = 'Login';
+$this->title = 'Sign Up';
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -22,7 +22,7 @@ $this->title = 'Login';
                     </h2>
 					<?php $form = ActiveForm::begin([
 						'id' => 'login-form',
-						'action' => ['site/attempt'],
+						'action' => ['site/register'],
 						'fieldConfig' => [
 							'template' => "{label}\n{input}\n{error}",
 							'labelOptions' => ['class' => 'col-form-label mr-lg-3'],
@@ -35,13 +35,13 @@ $this->title = 'Login';
 
                     <div class="form-group text-center">
                         <div>
-							<?= Html::submitButton('Login', ['class' => 'btn btn-primary w-100', 'name' => 'login-button']) ?>
+							<?= Html::submitButton('Register', ['class' => 'btn btn-primary w-100', 'name' => 'login-button']) ?>
                         </div>
                     </div>
 
 					<?php ActiveForm::end(); ?>
                     <hr class="my-4">
-                    <p class="text-center mb-0 small">Don't have an account? <a href="/site/signup">Sign Up</a></p>
+                    <p class="text-center mb-0 small"><a href="/site/login">Already have an account?</a></p>
                 </div>
             </div>
         </div>

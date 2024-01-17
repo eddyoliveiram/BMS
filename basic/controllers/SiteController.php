@@ -79,15 +79,16 @@ class SiteController extends Controller
 		$user = User::findByUsernameAndPassword($model->username, $model->password);
 
 		if(!$user){
-			Yii::$app->session->setFlash('warning', "Credentials not found.");
+			Yii::$app->session->setFlash('error', "Credentials not found.");
 			return $this->redirect('login');
 		}
 
-		if (Yii::$app->user->login($user)) {
-			return $this->redirect(['home/index']);
-		} else {
-			return $this->render('error');
+		if (!Yii::$app->user->login($user)) {
+			Yii::$app->session->setFlash('error', "Unfortunately the login has failed.");
+			return $this->redirect('login');
 		}
+
+		return $this->redirect(['home/index']);
 
 	}
 
@@ -106,5 +107,51 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+	public function actionSignup()
+	{
+		$model = new LoginForm();
+		$model->password = '';
+		return $this->render('signup', [
+			'model' => $model,
+		]);
+	}
+
+	public function actionRegister()
+	{
+		if (!Yii::$app->user->isGuest) {
+			return $this->goHome();
+		}
+
+		$model = new LoginForm();
+		$model->load(Yii::$app->request->post());
+
+		$user = new User();
+		$user->username = $model->username;
+		$user->password = Yii::$app->security->generatePasswordHash($model->password);
+
+		$anotherUserHasTakenUsername = User::findByUsername($model->username);
+
+		if($anotherUserHasTakenUsername){
+			Yii::$app->session->setFlash('error', "Unfortunately this Username has already been taken.");
+			return $this->redirect(['site/signup']);
+		}
+
+		if (!$user->customSave()) {
+			Yii::$app->session->setFlash('error', "Unfortunately the registration failed.");
+			return $this->redirect(['site/signup']);
+		}
+
+		$user = User::findByUsernameAndPassword($model->username, $model->password);
+
+		if (!Yii::$app->user->login($user)) {
+			Yii::$app->session->setFlash('error', "Unfortunately the login has failed.");
+			return $this->redirect('login');
+		}
+
+		Yii::$app->session->setFlash('success', "You have been registered successfully, enjoy it.");
+		return $this->redirect(['home/index']);
+
+	}
 
 }

@@ -7,28 +7,23 @@ use yii\db\ActiveRecord;
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
-	public $id;
 	public $username;
 	public $password;
 	public $authKey;
-	public $accessToken;
 
-	private static $users = [
-		'100' => [
-			'id' => '100',
-			'username' => 'admin',
-			'password' => 'admin',
-			'authKey' => 'test100key',
-			'accessToken' => '100-token',
-		],
-		'101' => [
-			'id' => '101',
-			'username' => 'demo',
-			'password' => 'demo',
-			'authKey' => 'test101key',
-			'accessToken' => '101-token',
-		],
-	];
+	public static function tableName()
+	{
+		return 'user';
+	}
+
+	public function rules()
+	{
+		return [
+			[['username', 'password'], 'required'],
+			[['username'], 'string'],
+			[['password'], 'string'],
+		];
+	}
 
 	public static function primaryKey()
 	{
@@ -45,11 +40,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	 */
 	public static function findIdentityByAccessToken($token, $type = null)
 	{
-		foreach (self::$users as $user) {
-			if ($user['accessToken'] === $token) {
-				return new static($user);
-			}
-		}
+//		foreach (self::$users as $user) {
+//			if ($user['accessToken'] === $token) {
+//				return new static($user);
+//			}
+//		}
 
 		return null;
 	}
@@ -62,23 +57,23 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	 */
 	public static function findByUsername($username)
 	{
-		foreach (self::$users as $user) {
-			if (strcasecmp($user['username'], $username) === 0) {
-				return new static($user);
-			}
-		}
+		$user = static::findOne(['username' => $username]);
+		return $user ?? null;
 
-		return null;
 	}
 
-	public static function findByUsernameAndPassword($username, $password)
+public static function findByUsernameAndPassword($username, $password)
 	{
 		$user = static::findOne(['username' => $username]);
-		if ($user && Yii::$app->security->validatePassword($password, $user->getAttribute('password_hashed'))) {
-			return $user;
+		if ($user == null) {
+			return null;
 		}
 
-		return null;
+		if(! Yii::$app->security->validatePassword($password, $user->getAttribute('password')) ){
+			return null;
+		}
+
+		return $user;
 	}
 
 	/**
@@ -115,10 +110,18 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	{
 		return $this->password === $password;
 	}
-	public function rules()
+
+	public function customSave() : bool
 	{
-		return [
-			[['username', 'password'], 'required']
+		$columns = [
+			'username' => $this->username,
+			'password' => $this->password
 		];
+		$table = $this->tableName();
+		if(!$this->db->createCommand()->insert($table, $columns)->execute()){
+			return false;
+		}
+		return true;
 	}
+
 }
