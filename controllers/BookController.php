@@ -2,16 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\User;
-use Yii;
+use app\models\Book;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
-class HomeController extends Controller
+class BookController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -63,8 +60,22 @@ class HomeController extends Controller
 
     public function actionIndex()
     {
-		$model = new LoginForm();
-		return $this->render('index');
+		$dataProvider = new ActiveDataProvider([
+			'query' => Book::find(),
+		]);
+
+		return $this->render('index', [
+			'dataProvider' => $dataProvider
+		]);
     }
+
+//	public function actionEdit()
+//	{
+//		$model = new LoginForm();
+//		return $this->render('index', [
+//			'att' => 'value '
+//		]);
+//	}
+
 
 }

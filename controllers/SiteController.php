@@ -59,7 +59,7 @@ class SiteController extends Controller
 	public function actionIndex()
 	{
 		if (!Yii::$app->user->isGuest)
-			return $this->redirect(['home/index']);
+			return $this->redirect(['book/index']);
 
 		$model = new LoginForm();
 		return $this->render('login', [
@@ -88,7 +88,7 @@ class SiteController extends Controller
 			return $this->redirect('login');
 		}
 
-		return $this->redirect(['home/index']);
+		return $this->redirect(['book/index']);
 
 	}
 
@@ -150,7 +150,7 @@ class SiteController extends Controller
 		}
 
 		Yii::$app->session->setFlash('success', "You have been registered successfully, enjoy it.");
-		return $this->redirect(['home/index']);
+		return $this->redirect(['book/index']);
 
 	}
 

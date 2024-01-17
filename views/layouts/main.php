@@ -40,7 +40,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 	$menuItems = [];
 	//	$menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
 	if (!Yii::$app->user->isGuest) {
-		$menuItems[] = ['label' => 'Home', 'url' => ['/home/index']];
+		$menuItems[] = ['label' => 'Home', 'url' => ['/book/index']];
 		$menuItems[] = [
 			'label' => 'Logout (' . Yii::$app->user->identity->getAttribute('username') . ')',
 			'url' => ['/site/logout'],
