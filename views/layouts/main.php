@@ -43,6 +43,7 @@ $this->registerLinkTag(['rel' => 'stylesheet', 'href' => 'https://cdnjs.cloudfla
 	//	$menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
 	if (!Yii::$app->user->isGuest) {
 		$menuItems[] = ['label' => 'Home', 'url' => ['/book/index']];
+		$menuItems[] = ['label' => 'Weather (API)', 'url' => ['/api/index']];
 		$menuItems[] = [
 			'label' => 'Logout (' . Yii::$app->user->identity->getAttribute('username') . ')',
 			'url' => ['/site/logout'],
