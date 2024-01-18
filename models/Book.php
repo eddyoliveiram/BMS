@@ -11,17 +11,22 @@ class Book extends ActiveRecord
 		return 'book';
 	}
 
+	public function getAuthor()
+	{
+		return $this->hasOne(Author::class, ['id' => 'author_id']);
+	}
+
+
 	public function rules()
 	{
 		return [
 			[
-				['title', 'description', 'author_id', 'pages', 'created_at'], 'required'
+				['title', 'description', 'author_id', 'pages'], 'required'
 			],
 			[['title'], 'string'],
 			[['description'], 'string'],
 			[['author_id'], 'integer'],
 			[['pages'], 'integer'],
-			[['created_at'], 'date'],
 		];
 	}
 
