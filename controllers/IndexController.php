@@ -8,20 +8,24 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 
-class SiteController extends Controller
+class IndexController extends Controller
 {
-
+	/**
+	 * Set up access control rules and HTTP verbs for the actions.
+	 *
+	 * @return array
+	 */
 	public function behaviors()
 	{
 		return [
 			'access' => [
 				'class' => AccessControl::class,
-				'only' => ['login','signup','logout'],
+				'only' => ['index','login','signup','logout'],
 				'rules' => [
 					[
 						//? = guests
 						'allow' => true,
-						'actions' => ['login', 'signup'],
+						'actions' => ['index','login', 'signup', 'attempt'],
 						'roles' => ['?'],
 					],
 					[
@@ -43,6 +47,11 @@ class SiteController extends Controller
 		];
 	}
 
+	/**
+	 * Define actions for handling errors and captcha.
+	 *
+	 * @return array
+	 */
 	public function actions()
 	{
 		return [
@@ -56,17 +65,26 @@ class SiteController extends Controller
 		];
 	}
 
+	/**
+	 * Displays the login form on the index page.
+	 * Initializes a new instance of the LoginForm model.
+	 *
+	 * @return string The rendered login view.
+	 */
 	public function actionIndex()
 	{
-		if (!Yii::$app->user->isGuest)
-			return $this->redirect(['book/index']);
-
 		$model = new LoginForm();
 		return $this->render('login', [
 			'model' => $model,
 		]);
 	}
 
+	/**
+	 * Attempts to log in the user based on the provided credentials.
+	 * Redirects to the book/index page on successful login, or redisplays the login form on failure.
+	 *
+	 * @return \yii\web\Response
+	 */
 	public function actionAttempt()
 	{
 		if (!Yii::$app->user->isGuest) {
@@ -92,37 +110,57 @@ class SiteController extends Controller
 
 	}
 
+	/**
+	 * Displays the login form.
+	 * Initializes a new instance of the LoginForm model.
+	 *
+	 * @return string
+	 */
 	public function actionLogin()
 	{
 		$model = new LoginForm();
-		$model->password = '';
+
 		return $this->render('login', [
 			'model' => $model,
 		]);
 	}
 
+	/**
+	 * Logs the user out and redirects to the home page.
+	 *
+	 * @return \yii\web\Response
+	 */
 	public function actionLogout()
 	{
 		Yii::$app->user->logout();
-
 		return $this->goHome();
 	}
 
+	/**
+	 * Displays the signup form.
+	 * Initializes a new instance of the LoginForm model.
+	 *
+	 * @return string
+	 */
 	public function actionSignup()
 	{
 		$model = new LoginForm();
-		$model->password = '';
+
 		return $this->render('signup', [
 			'model' => $model,
 		]);
 	}
 
+	/**
+	 * Registers a new user.
+	 * If successful, logs in the new user and redirects to the book/index page.
+	 * If unsuccessful, displays an error flash message and redirects to the signup page.
+	 *
+	 * @return \yii\web\Response
+	 */
+
 	public function actionRegister()
 	{
-		if (!Yii::$app->user->isGuest) {
-			return $this->goHome();
-		}
-
 		$model = new LoginForm();
 		$model->load(Yii::$app->request->post());
 
@@ -132,26 +170,25 @@ class SiteController extends Controller
 
 		$anotherUserHasTakenUsername = User::findByUsername($model->username);
 
-		if($anotherUserHasTakenUsername){
+		if ($anotherUserHasTakenUsername) {
 			Yii::$app->session->setFlash('error', "Unfortunately this Username has already been taken.");
-			return $this->redirect(['site/signup']);
+			return $this->redirect(['index/signup']);
 		}
 
-		if (!$user->customSave()) {
+		if (!$user->save()) {
 			Yii::$app->session->setFlash('error', "Unfortunately the registration failed.");
-			return $this->redirect(['site/signup']);
+			return $this->redirect(['index/signup']);
 		}
 
-		$user = User::findByUsernameAndPassword($model->username, $model->password);
+			$user = User::findByUsernameAndPassword($model->username, $model->password);
 
-		if (!Yii::$app->user->login($user)) {
-			Yii::$app->session->setFlash('error', "Unfortunately the login has failed.");
-			return $this->redirect('login');
-		}
+			if (!Yii::$app->user->login($user)) {
+				Yii::$app->session->setFlash('error', "Unfortunately the login has failed.");
+				return $this->redirect('login');
+			}
 
-		Yii::$app->session->setFlash('success', "You have been registered successfully, enjoy it.");
-		return $this->redirect(['book/index']);
-
+			Yii::$app->session->setFlash('success', "You have been registered successfully, enjoy it.");
+			return $this->redirect(['book/index']);
 	}
 
 }

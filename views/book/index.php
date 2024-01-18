@@ -13,7 +13,7 @@ echo '<div class="text-center fs-5">' .
 	'</span>' .
 	'</div>';
 
-$this->title = 'List of books';
+$this->title = 'Books';
 ?>
 
 <h1><?= Html::encode($this->title) ?></h1>

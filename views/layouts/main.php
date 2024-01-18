@@ -40,16 +40,19 @@ $this->registerLinkTag(['rel' => 'stylesheet', 'href' => 'https://cdnjs.cloudfla
 	]);
 
 	$menuItems = [];
-	//	$menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
 	if (!Yii::$app->user->isGuest) {
-		$menuItems[] = ['label' => 'Home', 'url' => ['/book/index']];
-		$menuItems[] = ['label' => 'Weather (API)', 'url' => ['/api/index']];
-		$menuItems[] = [
-			'label' => 'Logout (' . Yii::$app->user->identity->getAttribute('username') . ')',
-			'url' => ['/site/logout'],
-			'linkOptions' => ['data-method' => 'post'],
-		];
+		$menuItems[] = ['label' => '<i class="fas fa-book"></i> Books',
+            'url' => ['/book/index'],
+            'encode' => false];
+		$menuItems[] = ['label' => '<i class="fas fa-cloud-sun-rain"></i> Weather (API)',
+            'url' => ['/api/index'],
+            'encode' => false];
+		$menuItems[] = ['label' => '<i class="fas fa-sign-out-alt"></i> Logout',
+            'url' => ['/index/logout'],
+            'linkOptions' => ['data-method' => 'post'],
+			'encode' => false];
 	}
+
 	echo Nav::widget([
 		'options' => ['class' => 'navbar-nav ms-auto flex-nowrap'],
 		'items' => $menuItems,

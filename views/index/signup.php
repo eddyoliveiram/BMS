@@ -22,7 +22,7 @@ $this->title = 'Sign Up';
                     </h2>
 					<?php $form = ActiveForm::begin([
 						'id' => 'login-form',
-						'action' => ['site/register'],
+						'action' => ['index/register'],
 						'fieldConfig' => [
 							'template' => "{label}\n{input}\n{error}",
 							'labelOptions' => ['class' => 'col-form-label mr-lg-3'],
@@ -41,7 +41,7 @@ $this->title = 'Sign Up';
 
 					<?php ActiveForm::end(); ?>
                     <hr class="my-4">
-                    <p class="text-center mb-0 small"><a href="/site/login">Already have an account?</a></p>
+                    <p class="text-center mb-0 small"><a href="/index/login">Already have an account?</a></p>
                 </div>
             </div>
         </div>

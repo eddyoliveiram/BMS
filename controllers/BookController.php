@@ -13,53 +13,59 @@ use yii\filters\VerbFilter;
 class BookController extends Controller
 {
 
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors()
+	{
+		return [
+			'access' => [
+				'class' => AccessControl::class,
 				'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy'],
 				'rules' => [
 					[
-						//? = guests
+						// Allow authenticated users to access specified actions
 						'allow' => true,
-						'actions' => ['null'],
-						'roles' => ['?'],
-					],
-                    [
-						//@ = auth
-						'allow' => true,
-                        'actions' => ['index', 'create', 'store', 'edit', 'update', 'destroy'],
+						'actions' => ['index', 'create', 'store', 'edit', 'update', 'destroy'],
 						'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'index' => ['get'],
+					],
+				],
+			],
+			'verbs' => [
+				'class' => VerbFilter::class,
+				'actions' => [
+					'index' => ['get'],
 					'store' => ['post'],
 					'edit' => ['get'],
 					'update' => ['post'],
 					'destroy' => ['get'],
-                ],
-            ],
-        ];
-    }
+				],
+			],
+		];
+	}
 
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function actions()
+	{
+		return [
+			'error' => [
+				'class' => 'yii\web\ErrorAction',
+			],
+			'captcha' => [
+				'class' => 'yii\captcha\CaptchaAction',
+				'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+			],
+		];
+	}
 
+	/**
+	 * Displays a list of books.
+	 *
+	 * @param null $search
+	 * @return string
+	 */
 	public function actionIndex($search = null)
 	{
 		$searchModel = new BookSearch();
@@ -71,14 +77,22 @@ class BookController extends Controller
 		]);
 	}
 
-
-
+	/**
+	 * Displays the book creation form.
+	 *
+	 * @return string
+	 */
 	public function actionCreate()
 	{
 		$model = new BookForm();
 		return $this->render('create', ['model' => $model]);
 	}
 
+	/**
+	 * Handles the book creation process.
+	 *
+	 * @return string|\yii\web\Response
+	 */
 	public function actionStore()
 	{
 		$model = new BookForm();
@@ -99,9 +113,14 @@ class BookController extends Controller
 
 		Yii::$app->session->setFlash('success', 'Book added successfully.');
 		return $this->redirect(['book/index']);
-
 	}
 
+	/**
+	 * Displays the book editing form.
+	 *
+	 * @param $id
+	 * @return string|\yii\web\Response
+	 */
 	public function actionEdit($id)
 	{
 		$book = Book::findOne($id);
@@ -119,6 +138,12 @@ class BookController extends Controller
 		]);
 	}
 
+	/**
+	 * Handles the book update process.
+	 *
+	 * @param $id
+	 * @return string|\yii\web\Response
+	 */
 	public function actionUpdate($id)
 	{
 		$book = Book::findOne($id);
@@ -132,7 +157,6 @@ class BookController extends Controller
 		$model->attributes = $book->attributes;
 
 		if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()) {
-
 			$book->attributes = $model->attributes;
 
 			if ($book->save()) {
@@ -143,9 +167,14 @@ class BookController extends Controller
 				return $this->render('create', ['model' => $model]);
 			}
 		}
-
 	}
 
+	/**
+	 * Handles the book deletion process.
+	 *
+	 * @param $id
+	 * @return \yii\web\Response
+	 */
 	public function actionDestroy($id)
 	{
 		$model = Book::findOne($id);
@@ -163,5 +192,4 @@ class BookController extends Controller
 		Yii::$app->session->setFlash('success', 'Book deleted successfully.');
 		return $this->redirect(['index']);
 	}
-
 }

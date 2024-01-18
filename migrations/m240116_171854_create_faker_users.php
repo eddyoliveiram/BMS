@@ -14,9 +14,14 @@ class m240116_171854_create_faker_users extends Migration
     public function safeUp()
     {
 		$faker = \Faker\Factory::create();
+		$security = new Security();
 
-		for ($i = 0; $i < 10; $i++) {
-			$security = new Security();
+		$this->insert('user', [
+			'username' => 'admin',
+			'password' => $security->generatePasswordHash('admin')
+		]);
+
+		for ($i = 0; $i < 9; $i++) {
 			$passwordForAllUsers = '123';
 			$hashedPassword = $security->generatePasswordHash($passwordForAllUsers);
 

@@ -8,10 +8,12 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 
-
 class ApiController extends Controller
 {
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function behaviors()
 	{
 		return [
@@ -20,13 +22,11 @@ class ApiController extends Controller
 				'only' => ['index'],
 				'rules' => [
 					[
-						//? = guests
 						'allow' => true,
 						'actions' => ['null'],
 						'roles' => ['?'],
 					],
 					[
-						//@ = auth
 						'allow' => true,
 						'actions' => ['index'],
 						'roles' => ['@'],
@@ -42,6 +42,9 @@ class ApiController extends Controller
 		];
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function actions()
 	{
 		return [
@@ -55,6 +58,12 @@ class ApiController extends Controller
 		];
 	}
 
+	/**
+	 * Action to retrieve weather data from an external API.
+	 *
+	 * @return string|\yii\web\Response
+	 * @throws \yii\httpclient\Exception
+	 */
 	public function actionIndex()
 	{
 		$apiUrl = 'https://api.hgbrasil.com/weather';
@@ -70,8 +79,6 @@ class ApiController extends Controller
 			return $this->render('index', ['data' => $data]);
 		} else {
 			Yii::error('Error: ' . $response->statusCode);
-
 		}
 	}
-
 }

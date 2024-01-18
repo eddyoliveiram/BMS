@@ -41,11 +41,11 @@ $this->params['breadcrumbs'][] = $this->title;
 					<?= $form->field($model, 'pages')->input('number') ?>
 					<div class="form-group text-center">
 						<div>
-							<?= Html::submitButton('Save',
+							<?= Html::submitButton('<i class="fas fa-save"></i> Save',
                                 ['class' => 'btn btn-primary w-100', 'name' => 'save-button', 'style' => 'height: 50px;']
                             ) ?>
 							<?= Html::button(
-								'Back',
+								'<i class="fas fa-angle-left"></i> Back',
 								[
 									'class' => 'btn btn-secondary w-100 mt-2',
 									'onclick' => 'location.href="/book/index"',
