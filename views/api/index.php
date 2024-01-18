@@ -18,23 +18,24 @@ function translateDayOfWeek($dayOfWeek)
 	return isset($translation[$dayOfWeek]) ? $translation[$dayOfWeek] : $dayOfWeek;
 }
 
+// Filter the forecast array to include only the current day
+$currentDayForecast = array_filter($data['results']['forecast'], function ($forecast) {
+	$currentDate = date('d/m');
+	return $forecast['date'] == $currentDate;
+});
+
 ?>
 
 <h1 class="mt-2 mb-3">
 	<?= $data['results']['temp'].'º C | '.$data['results']['city'];?>
 </h1>
-<h3>10-Day Weather Forecast</h3>
+<h3 class="mt-2 mb-4">Today's Weather Forecast</h3>
 
 <div class="site-index">
 	<?= GridView::widget([
 		'dataProvider' => new \yii\data\ArrayDataProvider([
-			'allModels' => $data['results']['forecast'],
-			'sort' => [
-				'attributes' => ['date', 'weekday', 'rain_probability'],
-			],
-			'pagination' => [
-				'pageSize' => 10,
-			],
+			'allModels' => $currentDayForecast,
+			'pagination' => false, // Disable pagination for only one day
 		]),
 		'columns' => [
 			'date',
