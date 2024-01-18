@@ -1,41 +1,42 @@
 <?php
+
+use kartik\date\DatePicker;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use app\models\Book;
 
-echo '<div class="text-center fs-5">'.
-        'Welcome, '.
-        '<span style="color:green">'.
-        Yii::$app->user->identity->getAttribute('username').
-        '</span>'.
-    '</div>';
+echo '<div class="text-center fs-5">' .
+	'Welcome, ' .
+	'<span style="color:green">' .
+	Yii::$app->user->identity->getAttribute('username') .
+	'</span>' .
+	'</div>';
 
 $this->title = 'List of books';
 ?>
+
 <h1><?= Html::encode($this->title) ?></h1>
 
-<?= \yii\helpers\Html::button(
+<?= Html::button(
 	'<i class="fas fa-book"></i> Add new book',
 	[
-            'class' => 'btn btn-success btn-lg mt-2 mb-2',
+		'class' => 'btn btn-success btn-lg mt-2 mb-2',
 		'onclick' => 'location.href="/book/create"',
-        ]
+	]
 ) ?>
-<style>
-    .custom-pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px; /* Adjust as needed */
-    }
-</style>
+
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
+	'filterModel' => $searchModel,
 	'pager' => [
 		'class' => yii\bootstrap5\LinkPager::class,
 		'options' => [
 			'class' => 'd-flex justify-content-center',
-			'style' => 'margin-top: 20px;'
-		]
+			'style' => 'margin-top: 20px;',
+		],
 	],
+
 	'columns' => [
 		'title',
 		'description',
@@ -43,8 +44,9 @@ $this->title = 'List of books';
 			'attribute' => 'author_id',
 			'label' => 'Author',
 			'value' => function ($model) {
-				return $model->author->name; // Assuming the attribute for author's name is 'name'
+				return $model->author->name;
 			},
+			'filter' => \yii\helpers\ArrayHelper::map(\app\models\Author::find()->asArray()->all(), 'id', 'name'),
 		],
 		[
 			'attribute' => 'pages',
@@ -54,6 +56,7 @@ $this->title = 'List of books';
 			'attribute' => 'created_at',
 			'format' => ['datetime', 'php:m/d/Y h:i \G\M\T'],
 			'contentOptions' => ['class' => 'text-center'],
+//			'filter' => Html::input('date', 'BookSearch[created_at]', isset(Yii::$app->request->get('BookSearch')['created_at']) ? Yii::$app->request->get('BookSearch')['created_at'] : '', ['class' => 'form-control', 'placeholder' => 'mm/dd/yyyy']),
 		],
 		[
 			'label' => 'Edit',
@@ -72,36 +75,27 @@ $this->title = 'List of books';
 			'value' => function ($model) {
 				$deleteUrl = ['destroy', 'id' => $model->id];
 				$confirmMessage = 'Are you sure you want to delete this item?';
-				$deleteButtonId = 'delete-button-' . $model->id; // ID exclusivo para cada botão
+				$deleteButtonId = 'delete-button-' . $model->id;
 
 				$js = <<<JS
-        $("#{$deleteButtonId}").on("click", function() {
-            if (confirm("{$confirmMessage}")) {
-                var deleteUrl = "{$deleteUrl[0]}?id={$model->id}";
-                window.location.href = deleteUrl;
-            }
-        });
+                $("#{$deleteButtonId}").on("click", function() {
+                    if (confirm("{$confirmMessage}")) {
+                        var deleteUrl = "{$deleteUrl[0]}?id={$model->id}";
+                        window.location.href = deleteUrl;
+                    }
+                });
 JS;
-
-				// Registra o código JavaScript
 				$this->registerJs($js);
 
 				return Html::tag(
 					'div',
 					Html::a('<i class="fas fa-trash" style="color:red;font-size:22px"></i>', '#', [
-						'id' => $deleteButtonId, // Adicione o ID exclusivo aqui
+						'id' => $deleteButtonId,
 						'class' => 'delete-link',
 					]),
 					['class' => 'text-center']
 				);
 			},
 		],
-
-
 	],
-]);
-
-
-?>
-
-
+]); ?>

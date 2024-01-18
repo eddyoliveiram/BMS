@@ -4,8 +4,8 @@ namespace app\controllers;
 
 use app\models\Book;
 use app\models\BookForm;
+use app\models\BookSearch;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -60,16 +60,18 @@ class BookController extends Controller
         ];
     }
 
-    public function actionIndex()
-    {
-		$dataProvider = new ActiveDataProvider([
-			'query' => Book::find(),
-		]);
+	public function actionIndex($search = null)
+	{
+		$searchModel = new BookSearch();
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 		return $this->render('index', [
-			'dataProvider' => $dataProvider
+			'searchModel' => $searchModel,
+			'dataProvider' => $dataProvider,
 		]);
-    }
+	}
+
+
 
 	public function actionCreate()
 	{

@@ -5,6 +5,7 @@ use yii\db\ActiveRecord;
 
 class Book extends ActiveRecord
 {
+	public $search;
 
 	public static function tableName()
 	{

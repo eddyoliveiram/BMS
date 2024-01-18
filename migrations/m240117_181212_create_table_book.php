@@ -29,7 +29,7 @@ class m240117_181212_create_table_book extends Migration
 		$Ids = $this->getDb()->createCommand('SELECT id FROM author')->queryColumn();
 		$faker = Factory::create();
 
-		foreach (range(1, 50) as $r) {
+		foreach (range(1, 250) as $r) {
 			$this->insert('book', [
 				'title' => $faker->sentence,
 				'description' => $faker->text,
