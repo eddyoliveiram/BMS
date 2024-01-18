@@ -6,7 +6,6 @@ use app\models\Book;
 use app\models\BookForm;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\db\Expression;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -19,8 +18,8 @@ class BookController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index, create, store, edit, update'],
-                'rules' => [
+				'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy'],
+				'rules' => [
 					[
 						//? = guests
 						'allow' => true,
@@ -30,8 +29,8 @@ class BookController extends Controller
                     [
 						//@ = auth
 						'allow' => true,
-                        'actions' => ['null'],
-                        'roles' => ['@'],
+                        'actions' => ['index', 'create', 'store', 'edit', 'update', 'destroy'],
+						'roles' => ['@'],
                     ],
                 ],
             ],
@@ -40,7 +39,9 @@ class BookController extends Controller
                 'actions' => [
                     'index' => ['get'],
 					'store' => ['post'],
-
+					'edit' => ['get'],
+					'update' => ['post'],
+					'destroy' => ['get'],
                 ],
             ],
         ];
@@ -141,73 +142,24 @@ class BookController extends Controller
 			}
 		}
 
-
 	}
 
-
-
-
-	public function actionUpdateTwo($id)
+	public function actionDestroy($id)
 	{
 		$model = Book::findOne($id);
 
 		if (!$model) {
-			Yii::$app->session->setFlash('error', 'Failed to identify the book.');
-			return $this->render('create', ['model' => $model]);
+			Yii::$app->session->setFlash('error', 'Failed to find the book.');
+			return $this->redirect(['index']);
 		}
 
-		if (!$model->validate()) {
-			Yii::$app->session->setFlash('error', 'Failed to validate form.');
-			return $this->render('edit', ['model' => $model]);
+		if (!$model->delete()) {
+			Yii::$app->session->setFlash('error', 'Failed to delete the book.');
+			return $this->redirect(['index']);
 		}
 
-		if (!$model->save()) {
-			Yii::$app->session->setFlash('error', 'Failed to save changes.');
-			return $this->render('create', ['model' => $model]);
-		}
-
-		Yii::$app->session->setFlash('success', 'Changes were saved successfully.');
-		return $this->redirect(['book/index']);
+		Yii::$app->session->setFlash('success', 'Book deleted successfully.');
+		return $this->redirect(['index']);
 	}
-
-	public function actionUpdate2($id)
-	{
-		$model = Book::findOne($id);
-
-		$model->title = Yii::$app->request->post('Book')['title'];
-		$model->description = Yii::$app->request->post('Book')['description'];
-		$model->author_id = Yii::$app->request->post('Book')['author_id'];
-		$model->pages = Yii::$app->request->post('Book')['pages'];
-
-		if (!$model->validate()) {
-			Yii::$app->session->setFlash('error', 'Failed to validate form.');
-			return $this->render('create', ['model' => $model]);
-		}
-
-		dd($model);
-//
-//		$book = new Book();
-//		$book->title = $model->title;
-//		$book->description = $model->description;
-//		$book->author_id = $model->author_id;
-//		$book->pages = $model->pages;
-//		$book->created_at = Yii::$app->formatter->asDate('now');
-
-		if (!$model->save()) {
-			Yii::$app->session->setFlash('error', 'Failed to save changes.');
-			return $this->render('create', ['model' => $model]);
-		}
-
-		Yii::$app->session->setFlash('success', 'Changes were saved successfully.');
-		return $this->redirect(['book/index']);
-	}
-
-
-	public function actionDestroy()
-	{
-		$id = Yii::$app->request->get('id');
-//		return $this->render('edit', ['id' => $id]);
-	}
-
 
 }

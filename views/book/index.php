@@ -42,11 +42,18 @@ $this->title = 'List of books';
 		[
 			'attribute' => 'author_id',
 			'label' => 'Author',
+			'value' => function ($model) {
+				return $model->author->name; // Assuming the attribute for author's name is 'name'
+			},
 		],
-		'pages',
+		[
+			'attribute' => 'pages',
+			'contentOptions' => ['class' => 'text-center'],
+		],
 		[
 			'attribute' => 'created_at',
-			'format' => ['datetime', 'php:m/d/Y'],
+			'format' => ['datetime', 'php:m/d/Y h:i \G\M\T'],
+			'contentOptions' => ['class' => 'text-center'],
 		],
 		[
 			'label' => 'Edit',
@@ -63,35 +70,38 @@ $this->title = 'List of books';
 			'label' => 'Delete',
 			'format' => 'raw',
 			'value' => function ($model) {
-				$deleteUrl = ['delete', 'id' => $model->id];
+				$deleteUrl = ['destroy', 'id' => $model->id];
 				$confirmMessage = 'Are you sure you want to delete this item?';
+				$deleteButtonId = 'delete-button-' . $model->id; // ID exclusivo para cada botão
+
+				$js = <<<JS
+        $("#{$deleteButtonId}").on("click", function() {
+            if (confirm("{$confirmMessage}")) {
+                var deleteUrl = "{$deleteUrl[0]}?id={$model->id}";
+                window.location.href = deleteUrl;
+            }
+        });
+JS;
+
+				// Registra o código JavaScript
+				$this->registerJs($js);
 
 				return Html::tag(
 					'div',
 					Html::a('<i class="fas fa-trash" style="color:red;font-size:22px"></i>', '#', [
-						'data' => [
-							'confirm' => $confirmMessage,
-							'method' => 'post',
-							'url' => Yii::$app->urlManager->createUrl($deleteUrl),
-						],
+						'id' => $deleteButtonId, // Adicione o ID exclusivo aqui
 						'class' => 'delete-link',
 					]),
 					['class' => 'text-center']
 				);
 			},
 		],
+
+
 	],
 ]);
 
-$this->registerJs('
-    $(".delete-link").on("click", function() {
-        var confirmMessage = $(this).data("confirm");
-        var deleteUrl = $(this).data("url");
 
-        if (confirm(confirmMessage)) {
-            window.location.href = deleteUrl;
-        }
-    });
-');
 ?>
+
 
