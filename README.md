@@ -17,7 +17,7 @@ Assuming you've already cloned this repository:
 
 3º) On the terminal start the yii serve by running `php yii serve`, add a port if necessary, in this case `php yii serve -p 8888`.
 
-4º) After the migrations ran succefully, you're ready to log in, the `admin admin` user was created and also 9 others users were randomly created as well, all of them with a password = `123` since it's stored in hash, you just need to check their usarnames in the table to be able to log in with their accounts.
+4º) After the migrations ran succefully, you're ready to log in, the `admin admin` user was created and also 9 other users were randomly stored as well, all of them with a password = `123` since it's stored in hash, you just need to check their usarnames in the table to be able to log in with their accounts.
 
 5º) After logged in you're ready to make your first CRUD requests. Enjoyt it.
 
