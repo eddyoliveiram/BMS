@@ -130,7 +130,7 @@ api/index -> View displaying weather info in São Paulo.
 ```
 WeatherHelper.php -> A view component that translates data and returns to the _weather_details.php
 ```
-### Migrations
+### Migrations/
 ```
 m240116_161651_create_table_users -> create user table
 m240116_171854_create_faker_users -> add fake data to users
