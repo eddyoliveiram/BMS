@@ -7,8 +7,22 @@ Written in Yii 2
 
 This application is responsible for managing books, where users can register, login and request CRUD actions.
 
+First Access
+------------
+Assuming you've already cloned this repository:
 
-Rules
+1º) Open your SGBD and create a database called '`yii2basic`' which is the default settings of the `config/db.php` file.
+
+2º) Open terminal and run the command `php yii migrate/fresh` to create all tables and fake data.
+
+3º) On the terminal start the yii serve by running `php yii serve`, add a port if necessary, in this case `php yii serve -p 8888`.
+
+4º) After the migrations ran succefully, you're ready to log in, the `admin admin` user was created and also 9 others users were randomly created as well, all of them with a password = `123` since it's stored in hash, you just need to check their usarnames in the table to be able to log in with their accounts.
+
+5º) After logged in you're ready to make your first CRUD requests. Enjoyt it.
+
+
+Main Rules
 ------------
 ~~~
 1) Guest users have access only to login and signup pages.
@@ -70,7 +84,7 @@ actionSingup() -> Displays the signup form.
 actionRegister() -> Registers a new user.
 ```
 
-`BookController` responsible for handling CRUD requests
+`BookController` responsible for handling CRUD requests.
 ```
 behaviors() -> Control access to the methods below.
 actionIndex() -> Displays a list of all books.
@@ -81,7 +95,7 @@ actionUpdate() -> Handles the book update process.
 actionDestroy() -> Responsible for the book deletion process.
 ```
 
-`ApiController` responsible for Api requests
+`ApiController` responsible for Api requests.
 ```
 behaviors() -> Control access to the methods below.
 actionIndex() -> Displays information about the weather in São Paulo.
