@@ -11,15 +11,17 @@ First Access
 ------------
 Assuming you've already cloned this repository:
 
-1º) Open your SGBD and create a database called '`yii2basic`' which is the default settings of the `config/db.php` file.
+1º) Open the project and install the composer by running `composer install` on terminal.
 
-2º) Open terminal and run the command `php yii migrate/fresh` to create all tables and fake data.
+2º) Open your SGBD and create a database called '`yii2basic`' which is the default settings of the `config/db.php` file.
 
-3º) On the terminal start the yii serve by running `php yii serve`, add a port if necessary, in this case `php yii serve -p 8888`.
+3º) Open terminal and run the command `php yii migrate/fresh` to create all tables and fake data.
 
-4º) After the migrations ran succefully, you're ready to log in, the `admin admin` user was created and also 9 other users were randomly stored as well, all of them with a password equals `123` since it's stored in hash, you just need to check their usarnames in the table to be able to log in with their accounts.
+4º) On the terminal start the yii serve by running `php yii serve`, add a port if necessary, in this case `php yii serve -p 8888`.
 
-5º) After logged in you're ready to make your first CRUD requests. Enjoyt it.
+5º) After the migrations ran succefully, you're ready to log in, the `admin admin` user was created and also 9 other users were randomly stored as well, all of them with a password equals `123` since it's stored in hash, you just need to check their usarnames in the table to be able to log in with their accounts.
+
+6º) After logged in you're ready to make your first CRUD requests. Enjoyt it.
 
 
 Main Rules
