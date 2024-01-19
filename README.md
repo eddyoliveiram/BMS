@@ -35,7 +35,7 @@ Main Rules
 Dependencies and Configuration
 ------------
 
-### Via Composer
+### Dependencies I added via Composer
 
 Faker to provide fake data for the migrations.<BR>
 Httpclient for requests when consuming the API.
@@ -45,7 +45,7 @@ composer require --dev yiisoft/yii2-faker
 composer require yiisoft/yii2-httpclient
 ~~~
 
-### Manually
+### Manual config
 
 I worked with the default database config in `config/db.php`
 
