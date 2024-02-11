@@ -124,7 +124,7 @@ book/index -> View displaying all books in a table.
 book/edit -> View displaying the edit book form.
 book/create -> View displaying the create book form.
 
-api/_weather_details -> Model class for table author.
+api/_weather_details -> View part weather.
 api/index -> View displaying weather info in São Paulo.
 
 ```
